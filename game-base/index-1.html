@@ -1,0 +1,35 @@
+<html>
+	<head>
+		<script type="text/javascript">
+			function drawPixels(){
+				const game = document.getElementById("game");
+				const context = game.getContext("2d");
+				game.width = 100;
+				game.height=100;
+				const buffer = new ArrayBuffer(100*100*4);
+				const pixels = new Uint8ClampedArray(buffer);
+
+				let color = [255,0,0,255];
+				for (let i=0;i<100;i=i+4){
+					color = [255,0,0,255];
+					for(let j=0;j<400;++j){
+						pixels[(i+(j*100))] = color[0];
+						pixels[(i+(j*100))+1] = color[1];
+						pixels[(i+(j*100))+2] = color[2];
+						pixels[(i+(j*100))+3] = color[3]; 
+						if (j > 98) { color = [0,255,0,255];}
+						if (j > 198) { color = [0,0,255,255];}
+						if (j > 298) { color = [255,0,0,255];}
+					}
+				}
+				const image = new ImageData(pixels, 100, 100);
+				context.putImageData(image, 0,0);
+
+			}
+		</script>
+	</head>
+	<body onload="drawPixels()">
+		<canvas id="game" width="100" height="100"> </canvas>
+	</body>
+</html>
+

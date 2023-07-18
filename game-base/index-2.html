@@ -1,0 +1,74 @@
+<!-- 3 lesson drawing in the canvas -->
+<html>
+	<head>
+		<script type="text/javascript">
+			const CANVAS_WIDTH = 640;
+			const CANVAS_HEIGHT = 480;
+			const COLOR_ARRAY_LENGTH = 4;
+			const LIGHT_GRASS = [0, 203, 14,255];
+			const DARKER_GRASS = [10,97,16,255];
+			const WHITE_STRIPE = [255,255,255,255];
+			const RED_STRIPE = [255,0,0,255];
+			const ASPHALT = [200,200,200,255];
+			const GRASS_MAX_WIDTH = 0.8;
+			const STRIPE_WIDTH = 0.01;
+			const GRASS_MIN_WIDTH = 0.4;
+			var canvasElement;
+			var context;
+			
+			function initializeCanvas(){
+				canvasElement = document.getElementById("game");
+				context = canvasElement.getContext("2d");
+				canvasElement.width = CANVAS_WIDTH;
+				canvasElement.height = CANVAS_HEIGHT;
+				return context;
+			}
+
+			function drawOnBuffer(x, y, color, buffer) {
+				buffer[((x*4) + (y * CANVAS_WIDTH * 4))] = color[0];
+				buffer[((x*4) + (y * CANVAS_WIDTH * 4))+1] = color[1];
+				buffer[((x*4) + (y * CANVAS_WIDTH * 4))+2] = color[2];
+				buffer[((x*4) + (y * CANVAS_WIDTH * 4))+3] = color[3];
+			}
+			
+			function drawToCanvas(buffer){
+				context = initializeCanvas();
+				const image = new ImageData(buffer, CANVAS_WIDTH, CANVAS_HEIGHT);
+				context.putImageData(image, 0,0);
+			}
+
+			function initializeBuffer(){
+				const buffer = new ArrayBuffer(CANVAS_WIDTH*CANVAS_HEIGHT*COLOR_ARRAY_LENGTH);
+				return new Uint8ClampedArray(buffer);
+			}
+
+			function drawPixels(){
+				const buffer = initializeBuffer();
+				let color = [], grassLowerBound, grassUpperBound, asphaltLowerBound, asphaltUpperBound, stripeWidth, step;
+				step = ((GRASS_MAX_WIDTH - GRASS_MIN_WIDTH) / (CANVAS_HEIGHT / 2));
+				console.log(step);
+				stripeWidth = CANVAS_WIDTH * STRIPE_WIDTH;
+				grassLowerBound = GRASS_MAX_WIDTH/2 * CANVAS_WIDTH;
+				grassUpperBound  = CANVAS_WIDTH - grassLowerBound;
+				for (let y = CANVAS_HEIGHT/2; y < CANVAS_HEIGHT; ++y){
+					asphaltLowerBound = grassLowerBound + stripeWidth 
+					asphaltUpperBound = grassUpperBound - stripeWidth
+					for (let x = 0; x < CANVAS_WIDTH; ++x){
+						if(x < grassLowerBound || x > grassUpperBound) {color = LIGHT_GRASS;}
+						else if(x > asphaltLowerBound && x < asphaltUpperBound) {color = ASPHALT;}
+						else {color = WHITE_STRIPE;}
+						drawOnBuffer(x, y, color, buffer);
+					}
+					grassLowerBound -= (step * CANVAS_WIDTH);
+					grassUpperBound += (step * CANVAS_WIDTH);
+				}
+				console.log(grassUpperBound, "\n" , grassLowerBound);
+				drawToCanvas(buffer);
+			}
+		</script>
+	</head>
+	<body onload="drawPixels()">
+		<canvas id="game" width="640" height="480"> </canvas>
+	</body>
+</html>
+
