@@ -44,8 +44,9 @@
 
 			function drawPixels(){
 				const buffer = initializeBuffer();
-				let color = [], grassLowerBound, grassUpperBound, asphaltLowerBound, asphaltUpperBound, stripeWidth, step;
-				step = ((GRASS_MAX_WIDTH - GRASS_MIN_WIDTH) / (CANVAS_HEIGHT / 2));
+				let color = [], grassLowerB0ound, grassUpperBound, asphaltLowerBound, asphaltUpperBound, stripeWidth, step;
+				let grassStripe=0, laneStripe=0, stepGrass=1;
+				step = (GRASS_MIN_WIDTH * CANVAS_WIDTH) / (CANVAS_HEIGHT / 2)
 				console.log(step);
 				stripeWidth = CANVAS_WIDTH * STRIPE_WIDTH;
 				grassLowerBound = GRASS_MAX_WIDTH/2 * CANVAS_WIDTH;
@@ -54,15 +55,18 @@
 					asphaltLowerBound = grassLowerBound + stripeWidth 
 					asphaltUpperBound = grassUpperBound - stripeWidth
 					for (let x = 0; x < CANVAS_WIDTH; ++x){
-						if(x < grassLowerBound || x > grassUpperBound) {color = LIGHT_GRASS;}
+						if(x < grassLowerBound || x > grassUpperBound) {color = (Math.sin(grassStripe) > 0) ? LIGHT_GRASS : DARKER_GRASS;}
 						else if(x > asphaltLowerBound && x < asphaltUpperBound) {color = ASPHALT;}
-						else {color = WHITE_STRIPE;}
+						else {color = (Math.sin(laneStripe) > 0) ? WHITE_STRIPE : RED_STRIPE;}
 						drawOnBuffer(x, y, color, buffer);
 					}
-					grassLowerBound -= (step * CANVAS_WIDTH);
-					grassUpperBound += (step * CANVAS_WIDTH);
+					grassLowerBound -= step / 2;
+					grassUpperBound += step / 2;
+					laneStripe += (100 * STRIPE_WIDTH); 
+					grassStripe += stepGrass;
+					if(grassStripe > Math.PI) {stepGrass = stepGrass * GRASS_MAX_WIDTH;grassStripe = 0;}
 				}
-				console.log(grassUpperBound, "\n" , grassLowerBound);
+				console.log(laneStripe, "\n" , Math.sin(laneStripe));
 				drawToCanvas(buffer);
 			}
 		</script>
