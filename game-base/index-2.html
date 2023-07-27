@@ -15,7 +15,8 @@
 			const GRASS_MIN_WIDTH = 0.7;
 			var canvasElement;
 			var context;
-			
+			var stepControl = 2*Math.PI;	
+
 			function initializeCanvas(){
 				canvasElement = document.getElementById("game");
 				context = canvasElement.getContext("2d");
@@ -42,10 +43,10 @@
 				return new Uint8ClampedArray(buffer);
 			}
 
-			function drawPixels(){
+			function drawPixels(stepGrass){
 				const buffer = initializeBuffer();
 				let color = [], grassLowerB0ound, grassUpperBound, asphaltLowerBound, asphaltUpperBound, stripeWidth, step;
-				let grassStripe=0, laneStripe=0, stepGrass=1, laneStep=100;
+				let grassStripe=0, laneStripe=0, stepLane = stepGrass/3;
 				step = (GRASS_MIN_WIDTH * CANVAS_WIDTH) / (CANVAS_HEIGHT / 2)
 				stripeWidth = CANVAS_WIDTH * STRIPE_WIDTH;
 				grassLowerBound = GRASS_MAX_WIDTH/2 * CANVAS_WIDTH;
@@ -61,17 +62,25 @@
 					}
 					grassLowerBound -= step / 2;
 					grassUpperBound += step / 2;
-					laneStripe += (laneStep * STRIPE_WIDTH); 
-					if (laneStripe > 2*Math.PI) {laneStep = laneStep * 0.9; laneStripe = 0;}
+					laneStripe += stepLane;
 					grassStripe += stepGrass;
 					if(grassStripe > Math.PI*2) {stepGrass = stepGrass / 2; grassStripe = 0;}
+					if(laneStripe > 2*Math.PI) {stepLane = stepLane / 2; laneStripe = 0;}
 				}
-				console.log(laneStripe, "\n" , Math.sin(laneStripe));
 				drawToCanvas(buffer);
+			}
+			function run(){
+				drawPixels(stepControl);
+
+			}
+			function addFx(){
+				stepControl -= 0.1;
+				if (stepControl< Math.PI) { stepControl += Math.PI; }
+				run();
 			}
 		</script>
 	</head>
-	<body onload="drawPixels()">
+	<body onload="run()" onkeypress="addFx()">
 		<canvas id="game" width="640" height="480"> </canvas>
 	</body>
 </html>
