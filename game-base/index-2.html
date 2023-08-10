@@ -10,9 +10,10 @@
 			const WHITE_STRIPE = [255,255,255,255];
 			const RED_STRIPE = [255,0,0,255];
 			const ASPHALT = [200,200,200,255];
-			const GRASS_MAX_WIDTH = 0.8;
-			const STRIPE_WIDTH = 0.01;
-			const GRASS_MIN_WIDTH = 0.7;
+			const ASPHALT_MAX_WIDTH = 0.9;
+			const ASPHALT_MIN_WIDTH = 0.2;
+			const ASPHALT_WIDTH_STEP = (ASPHALT_MAX_WIDTH - ASPHALT_MIN_WIDTH) / (CANVAS_HEIGHT / 2);
+			const STRIPE_WIDTH = 0.03;
 			var canvasElement;
 			var context;
 			var stepControl = 2*Math.PI;	
@@ -43,25 +44,25 @@
 				return new Uint8ClampedArray(buffer);
 			}
 
-			function drawPixels(stepGrass){
+			function drawPixels(stepGrass,curve=1500){
 				const buffer = initializeBuffer();
-				let color = [], grassLowerB0ound, grassUpperBound, asphaltLowerBound, asphaltUpperBound, stripeWidth, step;
-				let grassStripe=0, laneStripe=0, stepLane = stepGrass/3;
-				step = (GRASS_MIN_WIDTH * CANVAS_WIDTH) / (CANVAS_HEIGHT / 2)
-				stripeWidth = CANVAS_WIDTH * STRIPE_WIDTH;
-				grassLowerBound = GRASS_MAX_WIDTH/2 * CANVAS_WIDTH;
-				grassUpperBound  = CANVAS_WIDTH - grassLowerBound;
+				let color = [], stripeWidth, grassStripe =0, laneStripe = 0;
+				let stepLane = stepGrass / 3, asphaltLane = CANVAS_WIDTH * ASPHALT_MIN_WIDTH;
 				for (let y = CANVAS_HEIGHT/2; y < CANVAS_HEIGHT; ++y){
-					asphaltLowerBound = grassLowerBound + stripeWidth 
-					asphaltUpperBound = grassUpperBound - stripeWidth
+					laneInsertionPoint = (CANVAS_WIDTH - asphaltLane) / 2;
+					if (curve != 0) { laneInsertionPoint = curveInsertionPoint(y, curve, laneInsertionPoint);}
+					stripeWidth = asphaltLane * STRIPE_WIDTH;
 					for (let x = 0; x < CANVAS_WIDTH; ++x){
-						if(x < grassLowerBound || x > grassUpperBound) {color = (Math.sin(grassStripe) > 0) ? LIGHT_GRASS : DARKER_GRASS;}
-						else if(x > asphaltLowerBound && x < asphaltUpperBound) {color = ASPHALT;}
-						else {color = (Math.sin(laneStripe) > 0) ? WHITE_STRIPE : RED_STRIPE;}
+						color = (Math.sin(grassStripe) > 0) ? LIGHT_GRASS : DARKER_GRASS;
+						if(x >= laneInsertionPoint && x < laneInsertionPoint + asphaltLane) {
+							color = ASPHALT;
+							if (x < laneInsertionPoint + stripeWidth || x > laneInsertionPoint + asphaltLane - stripeWidth) {
+								color = (Math.sin(laneStripe) > 0) ? WHITE_STRIPE : RED_STRIPE;
+							}
+						}
 						drawOnBuffer(x, y, color, buffer);
 					}
-					grassLowerBound -= step / 2;
-					grassUpperBound += step / 2;
+					asphaltLane += CANVAS_WIDTH * ASPHALT_WIDTH_STEP;
 					laneStripe += stepLane;
 					grassStripe += stepGrass;
 					if(grassStripe > Math.PI*2) {stepGrass = stepGrass / 2; grassStripe = 0;}
@@ -69,6 +70,13 @@
 				}
 				drawToCanvas(buffer);
 			}
+			function curveInsertionPoint(y, curve, currentInsertionPoint){
+				let coeficient = Math.abs(curve);
+				let xPoint = (CANVAS_HEIGHT - y) / CANVAS_HEIGHT;
+				let yPoint = coeficient * xPoint * xPoint;
+				return (curve > 0) ? currentInsertionPoint - yPoint : currentInsertionPoint + yPoint;
+			}
+
 			function run(){
 				drawPixels(stepControl);
 
@@ -77,6 +85,11 @@
 				stepControl -= 0.1;
 				if (stepControl< Math.PI) { stepControl += Math.PI; }
 				run();
+			}
+
+			function correctBound(curve, y) {
+				let coeficientA = (curve < 0) ? curve * -1: curve;
+				return coeficientA * y * y + 0.000010*y;
 			}
 		</script>
 	</head>
