@@ -9,10 +9,11 @@ window.addEventListener("load", function(){
 	const RED_STRIPE = [255,0,0,255];
 	const ASPHALT = [200,200,200,255];
 	const ASPHALT_MAX_WIDTH = 0.9;
-	const ASPHALT_MIN_WIDTH = 0.2;
+	const ASPHALT_MIN_WIDTH = 0.1;
 	const ASPHALT_WIDTH_STEP = (ASPHALT_MAX_WIDTH - ASPHALT_MIN_WIDTH) / (CANVAS_HEIGHT / 2);
 	const STRIPE_WIDTH = 0.03;
 	const TARGET_FRAME_TIME = 50
+	const MAX_SPEED = 0.6;
 	var canvasElement;
 	var context;
 	var stepControl = 2*Math.PI;	
@@ -23,7 +24,7 @@ window.addEventListener("load", function(){
 	class InputHandler{
 		constructor(game) {
 			this.game = game;
-			this.commands = ["w","s","a","d"," "];
+			this.commands = ["w","s","a","d"," ","p"];
 			window.addEventListener("keydown", e=> {
 				if (this.commands.indexOf(e.key.toLowerCase()) > -1){
 					this.game.keys[e.key.toLowerCase()] = true;
@@ -41,11 +42,26 @@ window.addEventListener("load", function(){
 		constructor(game) {
 			this.game = game;
 			this.curve = 0;
-			this.stepGrass = 0;
+			this.stepGrass = 2*Math.PI;
+		}
+
+		drawSky(buffer) {
+			let color = [], blue = 255;
+			for (let y = 0; y < CANVAS_HEIGHT/2; ++y) {
+				color = [0,0, blue, 255];
+				for (let x = 0; x < CANVAS_WIDTH; ++x){
+					this.drawOnBuffer(x, y, color, buffer);
+				}
+				blue *= 0.99;
+			}	
+			return buffer;
 		}
 		
 		draw(buffer) {
-			let color = [], stripeWidth, grassStripe =0, laneStripe = 0;
+			if (this.game.keys["p"]) {console.log(this.curve);}
+			buffer = this.drawSky(buffer);
+			let stepGrass = this.stepGrass;
+			let color = [], stripeWidth, grassStripe = stepGrass, laneStripe = 0;
 			let stepLane = this.stepGrass / 3, asphaltLane = CANVAS_WIDTH * ASPHALT_MIN_WIDTH;
 			let laneInsertionPoint = 0;
 			for (let y = CANVAS_HEIGHT/2; y < CANVAS_HEIGHT; ++y){
@@ -64,8 +80,8 @@ window.addEventListener("load", function(){
 				}
 				asphaltLane += CANVAS_WIDTH * ASPHALT_WIDTH_STEP;
 				laneStripe += stepLane;
-				grassStripe += this.stepGrass;
-				if(grassStripe > Math.PI*2) {this.stepGrass =this.stepGrass / 2; grassStripe = 0;}
+				grassStripe += stepGrass;
+				if(grassStripe > Math.PI*2) {stepGrass =stepGrass / 2; grassStripe = 0;}
 				if(laneStripe > 2*Math.PI) {stepLane = stepLane / 2; laneStripe = 0;}
 			}
 			return buffer;
@@ -79,6 +95,7 @@ window.addEventListener("load", function(){
 		}
 
 		curveInsertionPoint(y, curve, currentInsertionPoint){
+			if (this.game.keys["p"]) {console.log(this.curve);}
 			let coeficient = Math.abs(curve);
 			let xPoint = (CANVAS_HEIGHT - y) / CANVAS_HEIGHT;
 			let yPoint = coeficient * xPoint * xPoint;
@@ -101,14 +118,43 @@ window.addEventListener("load", function(){
 			};
 			this.inputs = new InputHandler(this);
 			this.distance = 0;
+			this.speed = 0;
+			this.lap = [
+				[0,600],
+				[1000,500],
+				[3000, 100],
+				[0, 1000],
+				[-1000, 800],
+			];
+			this.currentLapPoint = 0;
+			this.lapTime = 0;
+			this.lastLapTime = 0;
+			this.currentCurve = 0;
+			this.delta = 0;
 		}
 
 		update(timestamp) {
-			if (this.keys["w"]) {
-				this.circuit.stepGrass -= 0.1;
-				if(this.circuit.stepGrass < Math.PI){this.circuit.stepGrass += Math.PI;}
-				this.distance += 10;
+			this.circuit.stepGrass -= this.speed;
+			if(this.circuit.stepGrass < Math.PI){this.circuit.stepGrass += Math.PI;}
+			if (this.keys["w"]) {this.speed = (this.speed < MAX_SPEED) ? this.speed + 0.05 : MAX_SPEED;} 
+			else { this.speed = (this.speed > 0) ? this.speed - 0.03 : 0;}
+			this.distance += this.speed*10;
+			if (this.distance >= this.lap[this.currentLapPoint][1]) { 
+				this.currentLapPoint += 1;
+				if (this.currentLapPoint == this.lap.length){
+					this.currentLapPoint = 0;
+					this.lapTime = timestamp - this.lastLapTime;
+					this.lastLapTime = timestamp;
+					console.log(this.lapTime);
+				}
+				this.distance = 0;
+				this.currentCurve = this.lap[this.currentLapPoint][0];
+				this.circuit.curve = 0;
+				this.delta = (this.circuit.curve - this.currentCurve) * -1;
 			}
+			this.circuit.curve += this.delta/6;
+			if (this.delta > 0 && this.circuit.curve > this.currentCurve) { this.circuit.curve = this.currentCurve;}
+			if (this.delta < 0 && this.circuit.curve < this.currentCurve) { this.circuit.curve = this.currentCurve;}
 		}
 
 		draw(context) {
