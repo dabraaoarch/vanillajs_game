@@ -92,15 +92,12 @@ window.addEventListener("load", function(){
 			let distance = [0, 0];
 			let mapPosition = [0, 0];
 			let hit, side;
-			let ratio, smaller;
-			let endx;
+			let cateto, hipotenuse, endx, endy;
 			let player = [this.game.player.position[0], this.game.player.position[1]];
-			let ends = [0.0, 0.0];
-			let inv = 0;
+			let catetos = [0.0, 0.0];
 			let rows = 0;
 			for (let x = 0; x < WIDTH; x++){
 				player = [this.game.player.position[0], this.game.player.position[1]];
-				ends = [0.0, 0.0];
 				mapPosition[0] = Math.floor(this.game.player.position[0]);
 				mapPosition[1] = Math.floor(this.game.player.position[1]);
 				cameraX = x*2/(WIDTH+0.0) - 1;
@@ -108,23 +105,21 @@ window.addEventListener("load", function(){
 				direction[1] = this.game.player.angle[1] + this.fov[1] * cameraX;
 				relativeStep[0] = Math.abs(1/direction[0]);
 				relativeStep[1] = Math.abs(1/direction[1]);
+				catetos[0] = direction[0];
+				catetos[1] = direction[1];
 				if (direction[0] < 0) {
 					step[0] = -1;
 					distance[0]=(this.game.player.position[0]-mapPosition[0])*relativeStep[0];
-					ends[0] = (this.game.player.position[0]-mapPosition[0]);
 				} else {
 					step[0] = 1;
 					distance[0]=(mapPosition[0]+1.0-this.game.player.position[0])*relativeStep[0];
-					ends[0] = (mapPosition[0]+1.0-this.game.player.position[0]);
 				}
 				if (direction[1] < 0) {
 					step[1] = -1;
 					distance[1]=(this.game.player.position[1]-mapPosition[1])*relativeStep[1];
-					ends[1] = (this.game.player.position[1]-mapPosition[1]);
 				} else {
 					step[1] = 1;
 					distance[1]=(mapPosition[1]+1.0-this.game.player.position[1])*relativeStep[1];
-					ends[1] = (mapPosition[1]+1.0-this.game.player.position[1]);
 				}
 				hit = 0;
 				while(hit==0){
@@ -132,12 +127,12 @@ window.addEventListener("load", function(){
 						side = 0;
 						distance[0] += relativeStep[0];
 						mapPosition[0] += step[0];
-						ends[0] += step[0];
+						catetos[0] += step[0];
 					} else {
 						side = 1;
 						distance[1] += relativeStep[1];
 						mapPosition[1] += step[1];
-						ends[1] += step[1];
+						catetos[1] += step[1];
 					}
 					if (mapPosition[0] >= mapa[0].length || mapPosition[0] < 0) { 
 						hit = 1; 
@@ -145,33 +140,20 @@ window.addEventListener("load", function(){
 						hit = 1;
 					} else if (mapa[mapPosition[1]][mapPosition[0]] != 0) {
 						hit = 1;
-						smaller = (distance[0]-relativeStep[0]) * step[0];
-						inv = 0;
-						if (distance[0] > distance[1]) {
-							smaller = (distance[1] - relativeStep[1]) * step[1];
-							inv = 1;
-						}
+						catetos[side] -= step[side];
 					}
 				}
-				if (rows < 35) {
-					ratio = direction[1]/direction[0];
-					endx = Math.abs(smaller) * ratio;
+				if (rows < 640) {
+					if (this.game.keys["l"]) {
+						console.log("\nDistances: ", distance, "\nCatetos: ", catetos, "\nSteps: ", step, "\nSide: ", side, "\nRelative Step: ", relativeStep);
+					}
 					context.strokeStyle="#00ff00";
-					if (inv==1) {
-						let aux = smaller;
-						smaller = Math.abs(smaller) / ratio*-1;
-						endx = aux*-1;
-						context.strokeStyle="#ff0000";
-					}
-					if (this.game.keys["l"]) { 
-						console.log(smaller, endx, side, distance); 
-					}
 					context.beginPath();
 					player[0] *= box_width;
 					player[1] *= box_height;
 					context.moveTo(player[0], player[1]);
-					player[0] += (smaller * box_width);
-					player[1] -= (endx * box_height);
+					player[0] += (catetos[0] * box_width);
+					player[1] += (catetos[1] * box_height);
 					context.lineTo(player[0], player[1]);
 					context.stroke();
 					rows++;
