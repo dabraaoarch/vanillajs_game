@@ -91,10 +91,13 @@ window.addEventListener("load", function(){
 			let relativeStep = [0,0];
 			let distance = [0, 0];
 			let mapPosition = [0, 0];
-			let hit, side;
+			let hit, side, trueDist;
 			let cateto, hipotenuse, endx, endy;
 			let player = [this.game.player.position[0], this.game.player.position[1]];
+			let ends = [0.0, 0.0], ends2 = [0.0, 0.0];
 			let catetos = [0.0, 0.0];
+			let catetos2 = [0.0, 0.0];
+			let ratio;
 			let rows = 0;
 			for (let x = 0; x < WIDTH; x++){
 				player = [this.game.player.position[0], this.game.player.position[1]];
@@ -105,21 +108,27 @@ window.addEventListener("load", function(){
 				direction[1] = this.game.player.angle[1] + this.fov[1] * cameraX;
 				relativeStep[0] = Math.abs(1/direction[0]);
 				relativeStep[1] = Math.abs(1/direction[1]);
-				catetos[0] = direction[0];
-				catetos[1] = direction[1];
 				if (direction[0] < 0) {
 					step[0] = -1;
 					distance[0]=(this.game.player.position[0]-mapPosition[0])*relativeStep[0];
+					catetos2[0] = (this.game.player.position[0]-mapPosition[0]);
+					if (this.game.keys["l"]) { console.log("*Inicial 0: ",catetos2[0], "\n"); }
 				} else {
 					step[0] = 1;
 					distance[0]=(mapPosition[0]+1.0-this.game.player.position[0])*relativeStep[0];
+					catetos2[0] = (mapPosition[0]+1.0-this.game.player.position[0]);
+					if (this.game.keys["l"]) { console.log("*Inicial 0: ",catetos2[0], "\n"); }
 				}
 				if (direction[1] < 0) {
 					step[1] = -1;
 					distance[1]=(this.game.player.position[1]-mapPosition[1])*relativeStep[1];
+					catetos2[1] = (this.game.player.position[1]-mapPosition[1]);
+					if (this.game.keys["l"]) { console.log("*Inicial 1: ",catetos2[0], "\n"); }
 				} else {
 					step[1] = 1;
 					distance[1]=(mapPosition[1]+1.0-this.game.player.position[1])*relativeStep[1];
+					catetos2[1] = (mapPosition[1]+1.0-this.game.player.position[1]);
+					if (this.game.keys["l"]) { console.log("*Inicial 1: ",catetos2[0], "\n"); }
 				}
 				hit = 0;
 				while(hit==0){
@@ -127,12 +136,12 @@ window.addEventListener("load", function(){
 						side = 0;
 						distance[0] += relativeStep[0];
 						mapPosition[0] += step[0];
-						catetos[0] += step[0];
+						catetos2[0] += step[0];
 					} else {
 						side = 1;
 						distance[1] += relativeStep[1];
 						mapPosition[1] += step[1];
-						catetos[1] += step[1];
+						catetos2[1] += step[1];
 					}
 					if (mapPosition[0] >= mapa[0].length || mapPosition[0] < 0) { 
 						hit = 1; 
@@ -140,21 +149,50 @@ window.addEventListener("load", function(){
 						hit = 1;
 					} else if (mapa[mapPosition[1]][mapPosition[0]] != 0) {
 						hit = 1;
-						catetos[side] -= step[side];
+						distance[side] -= relativeStep[side];
+						catetos2[side] -= 1;
+						if (side==0){
+							ratio = Math.abs(catetos2[0] / direction[0]);
+							catetos[0] = catetos2[0];
+							catetos[1] = direction[1] * ratio;
+						} else {
+							ratio = Math.abs(catetos2[1] / direction[1]);
+							catetos[1] = catetos2[1];
+							catetos[0] = direction[0] * ratio;
+						}
 					}
 				}
 				if (rows < 640) {
 					if (this.game.keys["l"]) {
-						console.log("\nDistances: ", distance, "\nCatetos: ", catetos, "\nSteps: ", step, "\nSide: ", side, "\nRelative Step: ", relativeStep);
+						console.log("\nDistances: ", distance, "\nCatetos: ", catetos, "\nSteps: ", step, "\nSide: ", side, "\nDirection: ", direction, "\nRatio: ", ratio, "\nCatetos 2:", catetos2, "\nRaio: ", rows);
 					}
 					context.strokeStyle="#00ff00";
 					context.beginPath();
 					player[0] *= box_width;
 					player[1] *= box_height;
+					ends[0] = player[0];
+					ends[1] = player[1];
+					ends2[0] = player[0];
+					ends2[1] = player[1];
 					context.moveTo(player[0], player[1]);
-					player[0] += (catetos[0] * box_width);
-					player[1] += (catetos[1] * box_height);
-					context.lineTo(player[0], player[1]);
+					//if (step[0] > 0) {
+						ends[0] += (catetos[0] * box_width);
+					//} else {
+				//		ends[0] -= (catetos[0] * box_width);
+				//	}
+				//	if (step[1] > 0) {
+						ends[1] += (catetos[1] * box_height);
+				//	} else {
+				//		ends[1] -= (catetos[1] * box_height);
+				//	}
+					context.lineTo(ends[0], ends[1]);
+					context.stroke();
+					ends2[0] += (direction[0]*box_width);
+					ends2[1] += (direction[1]*box_height);
+					context.strokeStyle="#0000ff";
+					context.beginPath();
+					context.moveTo(player[0], player[1]);
+					context.lineTo(ends2[0], ends2[1]);
 					context.stroke();
 					rows++;
 				}
