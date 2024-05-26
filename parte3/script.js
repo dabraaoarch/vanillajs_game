@@ -37,7 +37,6 @@ window.addEventListener("load", function(){
 	class View {
 		constructor(game) {
 			this.game = game;
-			this.fov = [0.0, 0.66];
 		}
 		
 		draw(context){
@@ -91,21 +90,18 @@ window.addEventListener("load", function(){
 			let relativeStep = [0,0];
 			let distance = [0, 0];
 			let mapPosition = [0, 0];
-			let hit, side, trueDist;
-			let cateto, hipotenuse, endx, endy;
+			let hit, side;
 			let player = [this.game.player.position[0], this.game.player.position[1]];
-			let ends = [0.0, 0.0], ends2 = [0.0, 0.0];
+			let ends = [0.0, 0.0];
 			let catetos = [0.0, 0.0];
-			let catetos2 = [0.0, 0.0];
 			let ratio;
-			let rows = 0;
 			for (let x = 0; x < WIDTH; x++){
 				player = [this.game.player.position[0], this.game.player.position[1]];
 				mapPosition[0] = Math.floor(this.game.player.position[0]);
 				mapPosition[1] = Math.floor(this.game.player.position[1]);
 				cameraX = x*2/(WIDTH+0.0) - 1;
-				direction[0] = this.game.player.angle[0] + this.fov[0] * cameraX;
-				direction[1] = this.game.player.angle[1] + this.fov[1] * cameraX;
+				direction[0] = this.game.player.angle[0] + this.game.player.fov[0] * cameraX;
+				direction[1] = this.game.player.angle[1] + this.game.player.fov[1] * cameraX;
 				relativeStep[0] = Math.abs(1/direction[0]);
 				relativeStep[1] = Math.abs(1/direction[1]);
 				catetos = [0.0, 0.0];
@@ -158,40 +154,134 @@ window.addEventListener("load", function(){
 						}
 					}
 				}
-				if (rows < 640) {
-					context.strokeStyle="#00ff00";
-					context.beginPath();
-					player[0] *= box_width;
-					player[1] *= box_height;
-					ends[0] = player[0];
-					ends[1] = player[1];
-					ends2[0] = player[0];
-					ends2[1] = player[1];
-					context.moveTo(player[0], player[1]);
-					//if (step[0] > 0) {
-						ends[0] += (catetos[0] * box_width);
-					//} else {
-				//		ends[0] -= (catetos[0] * box_width);
-				//	}
-				//	if (step[1] > 0) {
-						ends[1] += (catetos[1] * box_height);
-				//	} else {
-				//		ends[1] -= (catetos[1] * box_height);
-				//	}
-					context.lineTo(ends[0], ends[1]);
-					context.stroke();
-					ends2[0] += (direction[0]*box_width);
-					ends2[1] += (direction[1]*box_height);
-					/*context.strokeStyle="#0000ff";
-					context.beginPath();
-					context.moveTo(player[0], player[1]);
-					context.lineTo(ends2[0], ends2[1]);
-					context.stroke();*/
-					rows++;
-				}
+				context.strokeStyle="#00ff00";
+				context.beginPath();
+				player[0] *= box_width;
+				player[1] *= box_height;
+				ends[0] = player[0];
+				ends[1] = player[1];
+				context.moveTo(player[0], player[1]);
+				ends[0] += (catetos[0] * box_width);
+				ends[1] += (catetos[1] * box_height);
+				context.lineTo(ends[0], ends[1]);
+				context.stroke();
 			}
-			this.game.keys["l"] = false;
 		}
+
+		update() {
+
+		}
+
+	}
+	class ViewGame {
+		constructor(game) {
+			this.game = game;
+		}
+
+		getImageData(context){
+			return context.createImageData(WIDTH, HEIGHT);
+		}
+		
+		drawToCanvas(context, imageData){
+			context.putImage(imageData, WIDTH, HEIGHT);
+		}
+
+		draw(context){
+			let cameraX;
+			let direction = [0,0];
+			let step = [0,0];
+			let relativeStep = [0,0];
+			let distance = [0, 0];
+			let mapPosition = [0, 0];
+			let hit, side, wallHeight, startDraw, endDraw, color, shade;
+			let player = [this.game.player.position[0], this.game.player.position[1]];
+			let row;
+			for (let x = 0; x < WIDTH; x++){
+				player = [this.game.player.position[0], this.game.player.position[1]];
+				mapPosition[0] = Math.floor(this.game.player.position[0]);
+				mapPosition[1] = Math.floor(this.game.player.position[1]);
+				cameraX = x*2/(WIDTH+0.0) - 1;
+				direction[0] = this.game.player.angle[0] + this.game.player.fov[0] * cameraX;
+				direction[1] = this.game.player.angle[1] + this.game.player.fov[1] * cameraX;
+				relativeStep[0] = Math.abs(1/direction[0]);
+				relativeStep[1] = Math.abs(1/direction[1]);
+				if (direction[0] < 0) {
+					step[0] = -1;
+					distance[0]=(this.game.player.position[0]-mapPosition[0])*relativeStep[0];
+				} else {
+					step[0] = 1;
+					distance[0]=(mapPosition[0]+1.0-this.game.player.position[0])*relativeStep[0];
+				}
+				if (direction[1] < 0) {
+					step[1] = -1;
+					distance[1]=(this.game.player.position[1]-mapPosition[1])*relativeStep[1];
+				} else {
+					step[1] = 1;
+					distance[1]=(mapPosition[1]+1.0-this.game.player.position[1])*relativeStep[1];
+				}
+				hit = 0;
+				while(hit==0){
+					if (distance[0]<distance[1]) {
+						side = 0;
+						distance[0] += relativeStep[0];
+						mapPosition[0] += step[0];
+					} else {
+						side = 1;
+						distance[1] += relativeStep[1];
+						mapPosition[1] += step[1];
+					}
+					if (mapPosition[0] >= mapa[0].length || mapPosition[0] < 0) { 
+						break; 
+					} else if (mapPosition[1] >= mapa.length || mapPosition[1] < 0) {
+						break;
+					} else if (mapa[mapPosition[1]][mapPosition[0]] != 0) {
+						hit = 1;
+						distance[side] -= relativeStep[side];
+						color = mapa[mapPosition[1]][mapPosition[0]];
+					}
+				}
+				wallHeight = HEIGHT / distance[side];	
+				startDraw = (HEIGHT - wallHeight) / 2;
+				endDraw = HEIGHT - startDraw;
+				if (startDraw < 0) { 
+					startDraw = 0; 
+					endDraw = HEIGHT;
+				}
+				shade = 1 - (startDraw/HEIGHT*1.2);
+				if (hit == 1) {
+					context.beginPath();
+					context.strokeStyle = this.game.getColor(color, shade);
+					context.moveTo(x+1, startDraw);
+					context.lineTo(x+1, endDraw);
+					context.stroke();
+					context.beginPath();
+					context.strokeStyle = "#60ba28";
+					context.moveTo(x+1, endDraw);
+					context.lineTo(x+1, HEIGHT);
+					context.stroke();
+					context.beginPath();
+					context.strokeStyle = "#25acfc";
+					context.moveTo(x+1, 0);
+					context.lineTo(x+1, startDraw);
+					context.stroke();
+				} else {
+					context.beginPath();
+					context.strokeStyle = "#009900";
+					context.moveTo(x+1, HEIGHT/2);
+					context.lineTo(x+1, HEIGHT);
+					context.stroke();
+					context.beginPath();
+					context.strokeStyle = "#001bea";
+					context.moveTo(x+1, 0);
+					context.lineTo(x+1, HEIGHT/2);
+					context.stroke();
+				}
+
+			}
+		
+		}
+
+
 		update() {
 
 		}
@@ -204,6 +294,7 @@ window.addEventListener("load", function(){
 			this.position = [3.5, 3.5];
 			this.angle = [-1,0];
 			this.step = 0.5;
+			this.fov = [0.0, 0.66];
 		}
 
 		draw(context) {
@@ -212,13 +303,13 @@ window.addEventListener("load", function(){
 		}
 		
 		update() {
-			if (this.game.keys["a"]) { 
-				this.angle = this.game.rotatePoint(this.angle, -1);
-				this.game.view.fov = this.game.rotatePoint(this.game.view.fov, -1);
-			}
 			if (this.game.keys["d"]) { 
+				this.angle = this.game.rotatePoint(this.angle, -1);
+				this.fov = this.game.rotatePoint(this.fov, -1);
+			}
+			if (this.game.keys["a"]) { 
 				this.angle = this.game.rotatePoint(this.angle);
-				this.game.view.fov = this.game.rotatePoint(this.game.view.fov);
+				this.fov = this.game.rotatePoint(this.fov);
 			}
 			if (this.game.keys["w"] || this.game.keys["s"]) { 
 				let x = this.step * this.angle[0];
@@ -268,6 +359,7 @@ window.addEventListener("load", function(){
 			this.player = new Player(this);
 			this.view = new View(this);
 			this.rotationStep = Math.PI/20;
+			this.viewGame = new ViewGame(this);
 		}
 
 		bindKeys(){
@@ -282,12 +374,16 @@ window.addEventListener("load", function(){
 
 		}
 
-		draw(context) {
+		draw(context,context2) {
 			context.clearRect(0,0,WIDTH/2, HEIGHT/2);
 			context.fillStyle="#000000";
 			context.fillRect(0,0, WIDTH/2, HEIGHT/2);
+			context2.clearRect(0,0,WIDTH, HEIGHT);
+			context2.fillStyle="#000000";
+			context2.fillRect(0,0, WIDTH, HEIGHT);
 			this.player.draw(context);
 			this.view.draw(context);
+			this.viewGame.draw(context2);
 		}
 		
 		rotatePoint(points=[], direction=1){
@@ -297,9 +393,49 @@ window.addEventListener("load", function(){
 			];
 		}
 
+		getColor(index, shade=1) {
+			let color;
+			if (index == 1) {
+				color = [255,0,0];
+			} else if (index == 1) {
+				color = [255,255,0];
+			} else if (index == 2) {
+				color = [255,0,255];
+			} else if (index == 3) {
+				color = [0,255,0];
+			} else if (index == 4) {
+				color = [0,0,255];
+			} else if (index == 5) {
+				color = [0,255,255];
+			} else if (index == 6) {
+				color = [150,0,150];
+			} else if (index == 7) {
+				color = [150,150,255];
+			} else if (index == 8) {
+				color = [255,150,0];
+			} else if (index == 9) {
+				color = [150,255,150];
+			} else if (index == 10) {
+				color = [255,255,255];
+			} else {
+				color = [0,0,0];
+			}
+			color[0] *= shade;
+			color[1] *= shade;
+			color[2] *= shade;
+			let result = "#" + Math.floor(color[0]).toString(16);
+			if(result.length != 3) { result += "0"; }
+			result += Math.floor(color[1]).toString(16) 
+			if(result.length != 5) { result += "0"; }
+			result += Math.floor(color[2]).toString(16);
+			if(result.length != 7) { result += "0"; }
+			return result;
+		}
+
 		update() {
 			this.player.update();
 			this.view.update();
+			this.viewGame.update();
 		}
 	}
 
@@ -311,7 +447,7 @@ window.addEventListener("load", function(){
 		let elapsed = timestamp - lastTime;
 		if (elapsed >= 50){
 			game.update();
-			game.draw(context_mapa);
+			game.draw(context_mapa, context_game);
 			lastTime = timestamp;
 		}
 		window.requestAnimationFrame(run);
