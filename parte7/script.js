@@ -32,9 +32,35 @@ window.addEventListener("load", function(){
 	  [1,4,0,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
 	  [1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
 	  [1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-	  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+	  [7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7]
 	];
-	console.log(mapa.length, mapa[0].length);
+	const solo = [
+	  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	  [0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	  [0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	  [0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+	  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+	];
+
 
 	class View {
 		constructor(game) {
@@ -83,6 +109,7 @@ window.addEventListener("load", function(){
 			context.stroke();
 
 			this.castRays(context, box_width, box_height);
+			this.draw_floor(context, box_width, box_height);
 		}
 
 		castRays(context, box_width, box_height){
@@ -169,6 +196,24 @@ window.addEventListener("load", function(){
 				context.stroke();
 			}
 		}
+		draw_floor(context, box_width, box_height){
+			let leftStartFloor = [], rightStartFloor = [], leftEndFloor = [], rightEndFloor = [];
+			leftStartFloor[0]=this.game.player.position[0]+this.game.player.angle[0]+this.game.player.fov[0]*-1;
+			leftStartFloor[1]=this.game.player.position[1]+this.game.player.angle[1]+this.game.player.fov[1]*-1;
+			rightStartFloor[0]=this.game.player.position[0]+this.game.player.angle[0]+this.game.player.fov[0]; 
+			rightStartFloor[1]=this.game.player.position[1]+this.game.player.angle[1]+this.game.player.fov[1];
+			leftStartFloor[0] *= box_width;
+			leftStartFloor[1] *= box_height;
+			rightStartFloor[0] *= box_width;
+			rightStartFloor[1] *= box_height;
+			context.fillStyle="#ff0000";
+			context.beginPath();
+			context.arc(leftStartFloor[0],leftStartFloor[1],1,0,2*Math.PI);
+			context.fill();
+			context.beginPath();
+			context.arc(rightStartFloor[0],rightStartFloor[1],1,0,2*Math.PI);
+			context.fill();
+		}
 
 		update() {
 
@@ -198,6 +243,8 @@ window.addEventListener("load", function(){
 			let catetos = [0.0, 0.0];
 			let oppositeSide,ratio, multiplier, rows = 1;
 			let textureStepY, startTexture;
+			let floorTextureStart = [], floorTextureEnd = [], floorTextureStep = [];
+			let floorTextureIndex = 0, mapFloor = [], deltaFloorDistance = [0,0];
 			for (let x = 0; x < WIDTH; x++){
 				player = [this.game.player.position[0], this.game.player.position[1]];
 				mapPosition[0] = Math.floor(this.game.player.position[0]);
@@ -263,17 +310,44 @@ window.addEventListener("load", function(){
 					startDraw = 0; 
 					endDraw = HEIGHT;
 				}
+				catetos[side] *= step[side];
+				floorTextureStart[0] = this.game.player.position[0] + (catetos[0]);
+				floorTextureStart[1] = this.game.player.position[1] + (catetos[1]);
+				floorTextureEnd[0] = this.game.player.position[0] + direction[0];
+				floorTextureEnd[1] = this.game.player.position[1] + direction[1];
+				step[0] = 1;
+				step[1] = 1;
+				if (floorTextureEnd[0] < floorTextureStart[0]) { step[0] = -1;}
+				if (floorTextureEnd[1] < floorTextureStart[1]) { step[1] = -1;}
+				deltaFloorDistance[0] = Math.sqrt((floorTextureEnd[0]-floorTextureStart[0])**2+1);
+				deltaFloorDistance[1] = Math.sqrt((floorTextureEnd[1]-floorTextureStart[1])**2+1);
+				floorTextureStep[0] = deltaFloorDistance[0] / startDraw;
+				floorTextureStep[1] = deltaFloorDistance[1] / startDraw;
+
 				textureStepY = wallHeight / TEXTURE_SIZE;
 				startTexture = (wallHeight - HEIGHT) / 2;
 				if (startTexture < 0) { startTexture = 0; }
 				shade = (1 - (startDraw/HEIGHT*1.2)) * (1-(side * 0.5));
 				if (hit == 1) {
 					for(let y = 0; y < HEIGHT; y++){	
-						//color = this.game.getColor(mapValue,shade,false);
 						if (y < startDraw) { 
 							color = [0,0,255]; 
 						} else if (y > endDraw) { 
 							color = [0,255,0]; 
+							mapFloor[0] = Math.floor(floorTextureStart[0]);
+							mapFloor[1] = Math.floor(floorTextureStart[1]);
+							floorTextureIndex = solo[mapFloor[1]][mapFloor[0]];
+							if (this.game.keys["l"]) {console.log(mapFloor);}
+							textureSample[0] = Math.floor(Math.abs(floorTextureStart[0]-mapFloor[0])/TEXTURE_STEP);
+							textureSample[1] = Math.floor(Math.abs(floorTextureStart[1]-mapFloor[1])/TEXTURE_STEP);
+							color = this.game.sampleTexture(floorTextureIndex, textureSample, 1);
+							floorTextureStart[0] += floorTextureStep[0];
+							floorTextureStart[1] += floorTextureStep[1];
+							deltaFloorDistance[0]=Math.sqrt((floorTextureEnd[0]-floorTextureStart[0])**2+1);
+							deltaFloorDistance[1]=Math.sqrt((floorTextureEnd[1]-floorTextureStart[1])**2+1);
+							floorTextureStep[0]=deltaFloorDistance[0]/startDraw*step[0];
+							floorTextureStep[1]=deltaFloorDistance[1]/startDraw*step[1];
+
 						} else {
 							textureSample[1] = Math.floor((y + startTexture-startDraw) / textureStepY);
 							color=this.game.sampleTexture(mapValue,textureSample,shade);
