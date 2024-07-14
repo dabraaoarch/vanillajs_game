@@ -23,7 +23,7 @@ window.addEventListener("load", function(){
 	  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
 	  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
 	  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-	  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+	  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,7,7,7,0,0,0,0,0,0,1],
 	  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
 	  [1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
 	  [1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -32,35 +32,9 @@ window.addEventListener("load", function(){
 	  [1,4,0,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
 	  [1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
 	  [1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-	  [7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7]
+	  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 	];
-	const solo = [
-	  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	  [0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	  [0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	  [0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	  [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-	  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-	];
-
+	
 
 	class View {
 		constructor(game) {
@@ -109,7 +83,6 @@ window.addEventListener("load", function(){
 			context.stroke();
 
 			this.castRays(context, box_width, box_height);
-			this.draw_floor(context, box_width, box_height);
 		}
 
 		castRays(context, box_width, box_height){
@@ -196,29 +169,90 @@ window.addEventListener("load", function(){
 				context.stroke();
 			}
 		}
-		draw_floor(context, box_width, box_height){
-			let leftStartFloor = [], rightStartFloor = [], leftEndFloor = [], rightEndFloor = [];
-			leftStartFloor[0]=this.game.player.position[0]+this.game.player.angle[0]+this.game.player.fov[0]*-1;
-			leftStartFloor[1]=this.game.player.position[1]+this.game.player.angle[1]+this.game.player.fov[1]*-1;
-			rightStartFloor[0]=this.game.player.position[0]+this.game.player.angle[0]+this.game.player.fov[0]; 
-			rightStartFloor[1]=this.game.player.position[1]+this.game.player.angle[1]+this.game.player.fov[1];
-			leftStartFloor[0] *= box_width;
-			leftStartFloor[1] *= box_height;
-			rightStartFloor[0] *= box_width;
-			rightStartFloor[1] *= box_height;
-			context.fillStyle="#ff0000";
-			context.beginPath();
-			context.arc(leftStartFloor[0],leftStartFloor[1],1,0,2*Math.PI);
-			context.fill();
-			context.beginPath();
-			context.arc(rightStartFloor[0],rightStartFloor[1],1,0,2*Math.PI);
-			context.fill();
-		}
 
 		update() {
 
 		}
 
+	}
+	class Ray{
+		constructor(game, cameraX){
+			this.game = game;
+			this.cameraX = cameraX;
+			this.mapPosition = [0,0];
+			this.direction = [0.0,0.0];
+			this.distance= [0.0,0.0];
+			this.relativeStep= [0.0,0.0];
+			this.mapValue = 0;
+			this.catetos = [0.0,0.0];
+			this.step = [0.0,0.0];
+			this.hit = 0;
+			this.side = 0;
+			this.wallHeight = 0;
+			this.startWall = 0;
+			this.endWall = HEIGHT;
+			this.setUp();
+		}
+
+		setUp() {
+			this.mapPosition[0]=Math.floor(this.game.player.position[0]);
+			this.mapPosition[1]=Math.floor(this.game.player.position[1]);
+			this.direction[0] = this.game.player.angle[0] + this.game.player.fov[0] * this.cameraX;
+			this.direction[1] = this.game.player.angle[1] + this.game.player.fov[1] * this.cameraX;
+			this.relativeStep[0] = Math.abs(1/this.direction[0]);
+			this.relativeStep[1] = Math.abs(1/this.direction[1]);
+			if (this.direction[0] < 0) {
+				this.step[0] = -1;
+				this.distance[0]=(this.game.player.position[0]-this.mapPosition[0])*this.relativeStep[0];
+				this.catetos[0] = (this.game.player.position[0]-this.mapPosition[0]);
+			} else {
+				this.step[0] = 1;
+				this.distance[0]=(this.mapPosition[0]+1.0-this.game.player.position[0])*this.relativeStep[0];
+				this.catetos[0] = (this.mapPosition[0]+1.0-this.game.player.position[0]);
+			}
+			if (this.direction[1] < 0) {
+				this.step[1] = -1;
+				this.distance[1]=(this.game.player.position[1]-this.mapPosition[1])*this.relativeStep[1];
+				this.catetos[1] = (this.game.player.position[1]-this.mapPosition[1]);
+			} else {
+				this.step[1] = 1;
+				this.distance[1]=(this.mapPosition[1]+1.0-this.game.player.position[1])*this.relativeStep[1];
+				this.catetos[1] = (this.mapPosition[1]+1.0-this.game.player.position[1]);
+			}
+		}
+
+		nextStep(){
+			if (this.distance[0]<this.distance[1]) {
+				this.side = 0;
+				this.distance[0] += this.relativeStep[0];
+				this.mapPosition[0] += this.step[0];
+				this.catetos[0] += 1;
+			} else {
+				this.side = 1;
+				this.distance[1] += this.relativeStep[1];
+				this.mapPosition[1] += this.step[1];
+				this.catetos[1] += 1;
+			}
+			if (this.mapPosition[0] >= mapa[0].length || this.mapPosition[0] < 0) {
+				return false; 
+			} else if (this.mapPosition[1] >= mapa.length || this.mapPosition[1] < 0) {
+				return false;	
+			} else if (mapa[this.mapPosition[1]][this.mapPosition[0]] != 0) {
+				this.hit = 1;
+				this.distance[this.side] -= this.relativeStep[this.side];
+				this.mapValue = mapa[this.mapPosition[1]][this.mapPosition[0]]-1;
+			}
+			if (this.hit == 1) {
+				this.wallHeight = HEIGHT/this.distance[this.side];
+				this.startWall=Math.floor((HEIGHT-this.wallHeight)/2);
+				this.endWall=Math.floor(HEIGHT-this.startWall);
+				if (this.startWall < 0) { 
+					this.startWall = 0; 
+					this.endWall = HEIGHT;
+				}
+			}
+			return true;
+		}
 	}
 	class ViewGame {
 		constructor(game) {
@@ -231,150 +265,109 @@ window.addEventListener("load", function(){
 
 		draw(context){
 			let cameraX;
-			let direction = [0,0];
-			let step = [0,0];
-			let relativeStep = [0,0];
-			let distance = [0, 0];
-			let mapPosition = [0, 0];
-			let hit, side, wallHeight, startDraw, endDraw, mapValue, shade;
-			let player = [this.game.player.position[0], this.game.player.position[1]];
-			let position, color;
-			let textureSample = [0, 0];
-			let catetos = [0.0, 0.0];
-			let oppositeSide,ratio, multiplier, rows = 1;
-			let textureStepY, startTexture;
-			let floorTextureStart = [], floorTextureEnd = [], floorTextureStep = [];
-			let floorTextureIndex = 0, mapFloor = [], deltaFloorDistance = [0,0];
 			for (let x = 0; x < WIDTH; x++){
-				player = [this.game.player.position[0], this.game.player.position[1]];
-				mapPosition[0] = Math.floor(this.game.player.position[0]);
-				mapPosition[1] = Math.floor(this.game.player.position[1]);
 				cameraX = x*2/(WIDTH+0.0) - 1;
-				direction[0] = this.game.player.angle[0] + this.game.player.fov[0] * cameraX;
-				direction[1] = this.game.player.angle[1] + this.game.player.fov[1] * cameraX;
-				relativeStep[0] = Math.abs(1/direction[0]);
-				relativeStep[1] = Math.abs(1/direction[1]);
-				if (direction[0] < 0) {
-					step[0] = -1;
-					distance[0]=(this.game.player.position[0]-mapPosition[0])*relativeStep[0];
-					catetos[0] = (this.game.player.position[0]-mapPosition[0]);
-				} else {
-					step[0] = 1;
-					distance[0]=(mapPosition[0]+1.0-this.game.player.position[0])*relativeStep[0];
-					catetos[0] = (mapPosition[0]+1.0-this.game.player.position[0]);
+				const ray = new Ray(this.game, cameraX);
+				while (ray.hit == 0){
+					if (!ray.nextStep()) { break; }
 				}
-				if (direction[1] < 0) {
-					step[1] = -1;
-					distance[1]=(this.game.player.position[1]-mapPosition[1])*relativeStep[1];
-					catetos[1] = (this.game.player.position[1]-mapPosition[1]);
-				} else {
-					step[1] = 1;
-					distance[1]=(mapPosition[1]+1.0-this.game.player.position[1])*relativeStep[1];
-					catetos[1] = (mapPosition[1]+1.0-this.game.player.position[1]);
-				}
-				hit = 0;
-				while(hit==0){
-					if (distance[0]<distance[1]) {
-						side = 0;
-						distance[0] += relativeStep[0];
-						mapPosition[0] += step[0];
-						catetos[0] += 1;
-					} else {
-						side = 1;
-						distance[1] += relativeStep[1];
-						mapPosition[1] += step[1];
-						catetos[1] += 1;
-					}
-					if (mapPosition[0] >= mapa[0].length || mapPosition[0] < 0) { 
-						break; 
-					} else if (mapPosition[1] >= mapa.length || mapPosition[1] < 0) {
-						break;
-					} else if (mapa[mapPosition[1]][mapPosition[0]] != 0) {
-						hit = 1;
-						distance[side] -= relativeStep[side];
-						mapValue = mapa[mapPosition[1]][mapPosition[0]];
-					}
-				}
-				oppositeSide = Math.abs(side - 1);
-				catetos[side] -= 1;
-				ratio = relativeStep[side] / relativeStep[oppositeSide];
-				catetos[oppositeSide] = catetos[side] * ratio * step[oppositeSide];
-				textureSample[0] = this.game.player.position[oppositeSide] + catetos[oppositeSide];
-				textureSample[0] = textureSample[0] - Math.floor(textureSample[0]);
-				textureSample[0] = Math.floor(textureSample[0] / TEXTURE_STEP);
-				if (hit == 0) {distance[side] = 1/0;}
-				wallHeight = HEIGHT / distance[side];
-				startDraw = (HEIGHT - wallHeight) / 2;
-				endDraw = HEIGHT - startDraw;
-				if (startDraw < 0) { 
-					startDraw = 0; 
-					endDraw = HEIGHT;
-				}
-				catetos[side] *= step[side];
-				floorTextureStart[0] = this.game.player.position[0] + (catetos[0]);
-				floorTextureStart[1] = this.game.player.position[1] + (catetos[1]);
-				floorTextureEnd[0] = this.game.player.position[0] + direction[0];
-				floorTextureEnd[1] = this.game.player.position[1] + direction[1];
-				step[0] = 1;
-				step[1] = 1;
-				if (floorTextureEnd[0] < floorTextureStart[0]) { step[0] = -1;}
-				if (floorTextureEnd[1] < floorTextureStart[1]) { step[1] = -1;}
-				deltaFloorDistance[0] = Math.sqrt((floorTextureEnd[0]-floorTextureStart[0])**2+1);
-				deltaFloorDistance[1] = Math.sqrt((floorTextureEnd[1]-floorTextureStart[1])**2+1);
-				floorTextureStep[0] = deltaFloorDistance[0] / startDraw;
-				floorTextureStep[1] = deltaFloorDistance[1] / startDraw;
-
-				textureStepY = wallHeight / TEXTURE_SIZE;
-				startTexture = (wallHeight - HEIGHT) / 2;
-				if (startTexture < 0) { startTexture = 0; }
-				shade = (1 - (startDraw/HEIGHT*1.2)) * (1-(side * 0.5));
-				if (hit == 1) {
-					for(let y = 0; y < HEIGHT; y++){	
-						if (y < startDraw) { 
-							color = [0,0,255]; 
-						} else if (y > endDraw) { 
-							color = [0,255,0]; 
-							mapFloor[0] = Math.floor(floorTextureStart[0]);
-							mapFloor[1] = Math.floor(floorTextureStart[1]);
-							floorTextureIndex = solo[mapFloor[1]][mapFloor[0]];
-							if (this.game.keys["l"]) {console.log(mapFloor);}
-							textureSample[0] = Math.floor(Math.abs(floorTextureStart[0]-mapFloor[0])/TEXTURE_STEP);
-							textureSample[1] = Math.floor(Math.abs(floorTextureStart[1]-mapFloor[1])/TEXTURE_STEP);
-							color = this.game.sampleTexture(floorTextureIndex, textureSample, 1);
-							floorTextureStart[0] += floorTextureStep[0];
-							floorTextureStart[1] += floorTextureStep[1];
-							deltaFloorDistance[0]=Math.sqrt((floorTextureEnd[0]-floorTextureStart[0])**2+1);
-							deltaFloorDistance[1]=Math.sqrt((floorTextureEnd[1]-floorTextureStart[1])**2+1);
-							floorTextureStep[0]=deltaFloorDistance[0]/startDraw*step[0];
-							floorTextureStep[1]=deltaFloorDistance[1]/startDraw*step[1];
-
-						} else {
-							textureSample[1] = Math.floor((y + startTexture-startDraw) / textureStepY);
-							color=this.game.sampleTexture(mapValue,textureSample,shade);
-						}
-						position = (y * WIDTH + x) * 4
-						this.game.image.data[position] = color[0];
-						this.game.image.data[position+1] = color[1];
-						this.game.image.data[position+2] = color[2];
-						this.game.image.data[position+3] = 255;
-					}
-				} else {
-					for(let y = 0; y < HEIGHT; y++){	
-						color = [0,255,0];
-						if (y < HEIGHT/2) { color = [0,0,255]; }
-						position = (y * WIDTH + x) * 4
-						this.game.image.data[position] = color[0];
-						this.game.image.data[position+1] = color[1];
-						this.game.image.data[position+2] = color[2];
-						this.game.image.data[position+3] = 255;
-					}
-				}
+				this.drawCeiling(ray, x);
+				this.drawWall(ray, x);
+				this.drawFloor(ray, x);
 				this.drawToCanvas(context, this.game.image);
-
 			}
-		
 		}
 
+		drawFloor(ray, x){
+			let position, color = [0, 255, 0], texture=0;
+			let textureSample = [0.0, 0.0];
+			let delta = (HEIGHT-ray.endWall);
+			let hipotenuse = ((ray.direction[0]**2)+(ray.direction[1]**2))**0.5;
+			let distances = [
+				(ray.distance[ray.side]-hipotenuse)/ray.direction[0],
+				(ray.distance[ray.side]-hipotenuse)/ray.direction[1]
+			];
+			let stepSize = [
+				distances[0]/delta,
+				distances[1]/delta
+			];
+			let texturePosition = [
+				this.game.player.position[0]+ray.direction[0],
+				this.game.player.position[1]+ray.direction[1]
+			];
+			for(let y = HEIGHT-1; y>=ray.endWall; y--) { 
+				//texture = mapa[Math.floor(texturePosition[1])][Math.floor(texturePosition[0])];
+				textureSample = [
+					Math.abs(Math.floor((texturePosition[0]-Math.floor(texturePosition[0]))/TEXTURE_STEP)),
+					Math.abs(Math.floor((texturePosition[1]-Math.floor(texturePosition[1]))/TEXTURE_STEP))
+				];	
+				color = this.game.sampleFloorTexture(texture, textureSample, 1);
+				if (this.game.keys["l"] && x == WIDTH-1){
+					console.log(
+						texture, "\n",
+						stepSize, "\n",
+						delta, "\n",
+						ray.direction, "\n",
+						texturePosition, "\n",
+						textureSample, "\n"
+					);
+				}
+				texturePosition[0] += stepSize[0];
+				texturePosition[1] += stepSize[1];
+				position = (y * WIDTH + x) * 4
+				this.game.image.data[position] = color[0];
+				this.game.image.data[position+1] = color[1];
+				this.game.image.data[position+2] = color[2];
+				this.game.image.data[position+3] = 255;
+			}
+		}
+
+
+		drawCeiling(ray, x){
+			let position, color = [0, 0, 255];
+			for(let y = 0; y < ray.startWall; y++){
+				position = (y * WIDTH + x) * 4
+				this.game.image.data[position] = color[0];
+				this.game.image.data[position+1] = color[1];
+				this.game.image.data[position+2] = color[2];
+				this.game.image.data[position+3] = 255;
+			}
+		}
+
+		drawWall(ray, x){
+			let oppositeSide, wallHeight, startDraw, endDraw, shade;
+			let textureStepY, position, ratio, startTexture;
+			let textureSample = [0.0,0.0];
+			let color = [0 ,0 ,0];
+			oppositeSide = Math.abs(ray.side - 1);
+			ray.catetos[ray.side] -= 1;
+			ratio=ray.relativeStep[ray.side]/ray.relativeStep[oppositeSide];
+			ray.catetos[oppositeSide]=ray.catetos[ray.side]*ratio*ray.step[oppositeSide];
+			textureSample[0]=this.game.player.position[oppositeSide]+ray.catetos[oppositeSide];
+			textureSample[0] = textureSample[0] - Math.floor(textureSample[0]);
+			if (ray.step[ray.side]<0 && ray.side==0) { 
+				textureSample[0] = 1 - textureSample[0]; 
+			}
+			if (ray.step[ray.side]>0 && ray.side==1) { 
+				textureSample[0] = 1 - textureSample[0]; 
+			}
+			textureSample[0]=Math.floor(textureSample[0]/TEXTURE_STEP);
+			textureStepY = ray.wallHeight / TEXTURE_SIZE;
+			startTexture = (ray.wallHeight - HEIGHT) / 2;
+			if (startTexture < 0) { startTexture = 0; }
+			shade=(1-(ray.startWall/HEIGHT*1.2))*(1-(ray.side*0.5));
+			if (ray.hit == 1) {
+				for(let y = ray.startWall; y <= ray.endWall; y++){
+					textureSample[1]=Math.floor((y+startTexture-ray.startWall)/textureStepY);
+					color=this.game.sampleTexture(ray.mapValue,textureSample,shade);
+					position = (y * WIDTH + x) * 4
+					this.game.image.data[position] = color[0];
+					this.game.image.data[position+1] = color[1];
+					this.game.image.data[position+2] = color[2];
+					this.game.image.data[position+3] = 255;
+				}
+			} 
+		}
 
 		update() {
 
@@ -489,12 +482,21 @@ window.addEventListener("load", function(){
 		}
 		sampleTexture(textureIndex, samplePosition, shade) {
 			let result = [0,0,0];
-			let position = ((textureIndex-1) * TEXTURE_SIZE * 3) + (samplePosition[1] * TEXTURE_SIZE * 30) + (samplePosition[0] * 3);
+			let position = (textureIndex * TEXTURE_SIZE * 3) + (samplePosition[1] * TEXTURE_SIZE * 30) + (samplePosition[0] * 3);
 			result[0] = Math.floor(textures[position]*shade);
 			result[1] = Math.floor(textures[position+1]*shade);
 			result[2] = Math.floor(textures[position+2]*shade);
 			return result;
 		}
+		sampleFloorTexture(textureIndex, samplePosition, shade) {
+			let result = [0,0,0];
+			let position = (textureIndex * TEXTURE_SIZE * 3) + (samplePosition[1] * TEXTURE_SIZE * 30) + (samplePosition[0] * 3);
+			result[0] = Math.floor(textures[position]*shade);
+			result[1] = Math.floor(textures[position+1]*shade);
+			result[2] = Math.floor(textures[position+2]*shade);
+			return result;
+		}
+
 
 		getColor(index, shade=1, hexaformat=true) {
 			let color;
